@@ -1,7 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
-const { Pool } = require("pg");
 require("dotenv").config();
+
 
 const app = express();
 
@@ -48,6 +48,19 @@ app.get('/', (req, res) => {
     </body>
     </html>
     `)
+})
+
+app.get('/info/get',(req, res) => {
+    try {
+        pool.connect(async(error, client, release) => {
+            let resp = await client.query(`SELECT * FROM test`);
+            release();
+            res.json(resp.rows)
+        })
+
+    } catch (err) {
+        console.error(err)
+    }
 })
 
 app.listen(port, () => {
